@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <sd.cmps121.com.hw5_171211.DrainView
+        android:id="@+id/drainView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
