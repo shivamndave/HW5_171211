@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tomato_color">#ffff4348</color>
+    <color name="drain_color">#aa8e8486</color>
+    <color name="line_color">#ff000000</color>
+</resources>
