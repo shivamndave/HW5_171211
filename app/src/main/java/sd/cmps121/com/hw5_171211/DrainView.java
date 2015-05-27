@@ -3,15 +3,11 @@ package sd.cmps121.com.hw5_171211;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
-/**
- * Created by shivamndave on 5/26/15.
- */
 public class DrainView extends View {
 
     private Paint tomatoPaint;
@@ -82,29 +78,58 @@ public class DrainView extends View {
         int mMeasuredWidth = getMeasuredWidth();
         int mMeasuredHeight = getMeasuredHeight();
 
+        int tomatoRadius = 50;
+        int drainRadius = 75;
+
         int drainX = mMeasuredWidth / 2;
         int drainY = mMeasuredHeight - (mMeasuredHeight / 8);
 
         _tomatoStartX += getTomatoX();
+
+        if (_tomatoStartX < tomatoRadius) {
+            _tomatoStartX = tomatoRadius;
+        } else if (_tomatoStartX > mMeasuredWidth - tomatoRadius) {
+            _tomatoStartX = mMeasuredWidth - tomatoRadius;
+        }
+
         _tomatoStartY += getTomatoY();
 
+        if (_tomatoStartY < tomatoRadius) {
+            _tomatoStartY = tomatoRadius;
+        } else if (_tomatoStartY > mMeasuredHeight - tomatoRadius) {
+            _tomatoStartY = mMeasuredHeight - tomatoRadius;
+        }
+
         int line1StartX = -100;
-        int line1StartY = mMeasuredHeight / 4;
+        int line1Y = mMeasuredHeight / 4;
         int line1EndX = mMeasuredWidth - (mMeasuredWidth / 3);
-        int line1EndY = mMeasuredHeight / 4;
 
         int line2StartX = mMeasuredWidth;
-        int line2StartY = mMeasuredHeight - (mMeasuredHeight / 4);
+        int line2Y = mMeasuredHeight - (mMeasuredHeight / 4);
         int line2EndX = mMeasuredWidth / 3;
-        int line2EndY = mMeasuredHeight - (mMeasuredHeight / 4);
 
-        int tomatoRadius = 50;
-        int drainRadius = 75;
+        if ((0 <= _tomatoStartX && _tomatoStartX <= line1EndX) && Math.abs(_tomatoStartY - line1Y) < tomatoRadius) {
+            int tomatoDiff1 = _tomatoStartY - line1Y;
+            if (tomatoDiff1 < 0) {
+                _tomatoStartY += Math.abs(tomatoDiff1) - tomatoRadius;
+            } else if (tomatoDiff1 > 0) {
+                _tomatoStartY -= Math.abs(tomatoDiff1) - tomatoRadius;
+            }
+        }
+
+        if ((line2EndX <= _tomatoStartX && _tomatoStartX <= line2StartX) && Math.abs(_tomatoStartY - line2Y) < tomatoRadius) {
+            int tomatoDiff1 = _tomatoStartY - line2Y;
+            if (tomatoDiff1 < 0) {
+                _tomatoStartY += Math.abs(tomatoDiff1) - tomatoRadius;
+            } else if (tomatoDiff1 > 0) {
+                _tomatoStartY -= Math.abs(tomatoDiff1) - tomatoRadius;
+            }
+        }
 
         canvas.drawCircle(_tomatoStartX, _tomatoStartY, tomatoRadius, tomatoPaint);
         canvas.drawCircle(drainX, drainY, drainRadius, drainPaint);
-        canvas.drawLine(line1StartX, line1StartY, line1EndX, line1EndY, line1Paint);
-        canvas.drawLine(line2StartX, line2StartY, line2EndX, line2EndY, line2Paint);
+        canvas.drawLine(line1StartX, line1Y, line1EndX, line1Y, line1Paint);
+        canvas.drawLine(line2StartX, line2Y, line2EndX, line2Y, line2Paint);
 
         canvas.save();
         canvas.restore();
