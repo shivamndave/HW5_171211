@@ -15,8 +15,8 @@ public class DrainView extends View {
     private Paint line1Paint;
     private Paint line2Paint;
 
-    private int _tomatoStartX;
-    private int _tomatoStartY;
+    private int _tomatoX;
+    private int _tomatoY;
 
     private float _xLoc;
     private float _yLoc;
@@ -54,8 +54,8 @@ public class DrainView extends View {
         tomatoPaint.setStrokeWidth(1);
         tomatoPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        _tomatoStartX = mMeasuredWidth / 2;
-        _tomatoStartY = mMeasuredHeight / 8;
+        _tomatoX = mMeasuredWidth / 2;
+        _tomatoY = mMeasuredHeight / 8;
 
         drainPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         drainPaint.setColor(r.getColor(R.color.drain_color));
@@ -84,20 +84,20 @@ public class DrainView extends View {
         int drainX = mMeasuredWidth / 2;
         int drainY = mMeasuredHeight - (mMeasuredHeight / 8);
 
-        _tomatoStartX += getTomatoX();
+        _tomatoX += getTomatoX();
 
-        if (_tomatoStartX < tomatoRadius) {
-            _tomatoStartX = tomatoRadius;
-        } else if (_tomatoStartX > mMeasuredWidth - tomatoRadius) {
-            _tomatoStartX = mMeasuredWidth - tomatoRadius;
+        if (_tomatoX < tomatoRadius) {
+            _tomatoX = tomatoRadius;
+        } else if (_tomatoX > mMeasuredWidth - tomatoRadius) {
+            _tomatoX = mMeasuredWidth - tomatoRadius;
         }
 
-        _tomatoStartY += getTomatoY();
+        _tomatoY += getTomatoY();
 
-        if (_tomatoStartY < tomatoRadius) {
-            _tomatoStartY = tomatoRadius;
-        } else if (_tomatoStartY > mMeasuredHeight - tomatoRadius) {
-            _tomatoStartY = mMeasuredHeight - tomatoRadius;
+        if (_tomatoY < tomatoRadius) {
+            _tomatoY = tomatoRadius;
+        } else if (_tomatoY > mMeasuredHeight - tomatoRadius) {
+            _tomatoY = mMeasuredHeight - tomatoRadius;
         }
 
         int line1StartX = -100;
@@ -108,25 +108,32 @@ public class DrainView extends View {
         int line2Y = mMeasuredHeight - (mMeasuredHeight / 4);
         int line2EndX = mMeasuredWidth / 3;
 
-        if ((0 <= _tomatoStartX && _tomatoStartX <= line1EndX) && Math.abs(_tomatoStartY - line1Y) < tomatoRadius) {
-            int tomatoDiff1 = _tomatoStartY - line1Y;
+        if ((0 <= _tomatoX && _tomatoX <= line1EndX) && Math.abs(_tomatoY - line1Y) < tomatoRadius) {
+            int tomatoDiff1 = _tomatoY - line1Y;
             if (tomatoDiff1 < 0) {
-                _tomatoStartY += Math.abs(tomatoDiff1) - tomatoRadius;
+                _tomatoY += Math.abs(tomatoDiff1) - tomatoRadius;
             } else if (tomatoDiff1 > 0) {
-                _tomatoStartY -= Math.abs(tomatoDiff1) - tomatoRadius;
+                _tomatoY -= Math.abs(tomatoDiff1) - tomatoRadius;
             }
         }
 
-        if ((line2EndX <= _tomatoStartX && _tomatoStartX <= line2StartX) && Math.abs(_tomatoStartY - line2Y) < tomatoRadius) {
-            int tomatoDiff1 = _tomatoStartY - line2Y;
+        if ((line2EndX <= _tomatoX && _tomatoX <= line2StartX) && Math.abs(_tomatoY - line2Y) < tomatoRadius) {
+            int tomatoDiff1 = _tomatoY - line2Y;
             if (tomatoDiff1 < 0) {
-                _tomatoStartY += Math.abs(tomatoDiff1) - tomatoRadius;
+                _tomatoY += Math.abs(tomatoDiff1) - tomatoRadius;
             } else if (tomatoDiff1 > 0) {
-                _tomatoStartY -= Math.abs(tomatoDiff1) - tomatoRadius;
+                _tomatoY -= Math.abs(tomatoDiff1) - tomatoRadius;
             }
         }
 
-        canvas.drawCircle(_tomatoStartX, _tomatoStartY, tomatoRadius, tomatoPaint);
+        double holeTomatoDistance = Math.sqrt(Math.pow((_tomatoX - drainX), 2) + Math.pow((_tomatoY - drainY), 2));
+
+        if (holeTomatoDistance < Math.abs(tomatoRadius - drainRadius)){
+            _tomatoX = mMeasuredWidth / 2;
+            _tomatoY = mMeasuredHeight / 8;
+        }
+
+        canvas.drawCircle(_tomatoX, _tomatoY, tomatoRadius, tomatoPaint);
         canvas.drawCircle(drainX, drainY, drainRadius, drainPaint);
         canvas.drawLine(line1StartX, line1Y, line1EndX, line1Y, line1Paint);
         canvas.drawLine(line2StartX, line2Y, line2EndX, line2Y, line2Paint);
