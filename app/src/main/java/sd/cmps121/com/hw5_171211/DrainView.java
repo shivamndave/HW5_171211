@@ -54,13 +54,29 @@ public class DrainView extends View {
         int mMeasuredWidth = getMeasuredWidth();
         int mMeasuredHeight = getMeasuredHeight();
 
-        int px = mMeasuredWidth / 2;
-        int py = mMeasuredHeight / 2 ;
+        int tomatoStartX = mMeasuredWidth / 2;
+        int tomatoStartY = mMeasuredHeight / 8 ;
 
-        int radius = Math.min(px, py);
+        int drainX = mMeasuredWidth / 2;
+        int drainY = mMeasuredHeight - (mMeasuredHeight / 8) ;
 
-        // Draw the background
-        canvas.drawCircle(px, py, radius, tomatoPaint);
+        int line1StartX = -100;
+        int line1StartY = mMeasuredHeight / 4 ;
+        int line1EndX = mMeasuredWidth - (mMeasuredWidth / 3);
+        int line1EndY = mMeasuredHeight / 4 ;
+
+        int line2StartX = mMeasuredWidth;
+        int line2StartY = mMeasuredHeight - (mMeasuredHeight / 4);
+        int line2EndX = mMeasuredWidth / 3;
+        int line2EndY = mMeasuredHeight - (mMeasuredHeight / 4) ;
+
+        int tomatoRadius = 50;
+        int drainRadius = 75;
+
+        canvas.drawCircle(tomatoStartX, tomatoStartY, tomatoRadius, tomatoPaint);
+        canvas.drawCircle(drainX, drainY, drainRadius, drainPaint);
+        canvas.drawLine(line1StartX, line1StartY, line1EndX, line1EndY, line1Paint);
+        canvas.drawLine(line2StartX, line2StartY, line2EndX, line2EndY, line2Paint);
 
         canvas.save();
         canvas.restore();
