@@ -21,6 +21,12 @@ public class DrainView extends View {
     private float _xLoc;
     private float _yLoc;
 
+//  Physics variables
+    private double _alpha = .3;
+    private double  _beta = 7;
+    private double _gamma = -0.5;
+
+
     private float getTomatoX() {
         return _xLoc;
     }
@@ -84,7 +90,7 @@ public class DrainView extends View {
         int drainX = mMeasuredWidth / 2;
         int drainY = mMeasuredHeight - (mMeasuredHeight / 8);
 
-        _tomatoX += getTomatoX();
+        _tomatoX += (getTomatoX()*_beta) - (_alpha*getTomatoX()*_beta);
 
         if (_tomatoX < tomatoRadius) {
             _tomatoX = tomatoRadius;
@@ -92,7 +98,7 @@ public class DrainView extends View {
             _tomatoX = mMeasuredWidth - tomatoRadius;
         }
 
-        _tomatoY += getTomatoY();
+        _tomatoY += (getTomatoY()*_beta) - (_alpha*getTomatoY()*_beta);
 
         if (_tomatoY < tomatoRadius) {
             _tomatoY = tomatoRadius;
@@ -108,23 +114,51 @@ public class DrainView extends View {
         int line2Y = mMeasuredHeight - (mMeasuredHeight / 4);
         int line2EndX = mMeasuredWidth / 3;
 
+        // If the first barrier is hit on a flat side
         if ((0 <= _tomatoX && _tomatoX <= line1EndX) && Math.abs(_tomatoY - line1Y) < tomatoRadius) {
             int tomatoDiff1 = _tomatoY - line1Y;
             if (tomatoDiff1 < 0) {
-                _tomatoY += Math.abs(tomatoDiff1) - tomatoRadius;
+                _tomatoY += (Math.abs(tomatoDiff1) - tomatoRadius);
             } else if (tomatoDiff1 > 0) {
-                _tomatoY -= Math.abs(tomatoDiff1) - tomatoRadius;
+                _tomatoY -= (Math.abs(tomatoDiff1) - tomatoRadius);
             }
         }
 
-        if ((line2EndX <= _tomatoX && _tomatoX <= line2StartX) && Math.abs(_tomatoY - line2Y) < tomatoRadius) {
-            int tomatoDiff1 = _tomatoY - line2Y;
-            if (tomatoDiff1 < 0) {
-                _tomatoY += Math.abs(tomatoDiff1) - tomatoRadius;
-            } else if (tomatoDiff1 > 0) {
-                _tomatoY -= Math.abs(tomatoDiff1) - tomatoRadius;
+        double corner1Dist = Math.sqrt(Math.pow((line1EndX - _tomatoX), 2) + Math.pow((line1Y - _tomatoY), 2));
+
+        if (line1EndX < _tomatoX && corner1Dist < tomatoRadius){
+            if(_tomatoY > line1Y){
+                _tomatoX += tomatoRadius;
+                _tomatoY += tomatoRadius;
+            } else if(_tomatoY < line1Y){
+                _tomatoX += tomatoRadius;
+                _tomatoY -= tomatoRadius;
             }
         }
+
+        // If the second barrier is hit on a flat side
+        if ((line2EndX <= _tomatoX && _tomatoX <= line2StartX) && Math.abs(_tomatoY - line2Y) < tomatoRadius) {
+            int tomatoDiff2 = _tomatoY - line2Y;
+            if (tomatoDiff2 < 0) {
+                _tomatoY += (Math.abs(tomatoDiff2) - tomatoRadius);
+            } else if (tomatoDiff2 > 0) {
+                _tomatoY -= (Math.abs(tomatoDiff2) - tomatoRadius);
+            }
+        }
+
+        double corner2Dist = Math.sqrt(Math.pow((line2EndX - _tomatoX), 2) + Math.pow((line2Y - _tomatoY), 2));
+
+        if (line2EndX > _tomatoX && corner2Dist < tomatoRadius){
+            if(_tomatoY > line2Y){
+                _tomatoX += tomatoRadius;
+                _tomatoY += tomatoRadius;
+            } else if(_tomatoY < line1Y){
+                _tomatoX += tomatoRadius;
+                _tomatoY -= tomatoRadius;
+            }
+        }
+
+
 
         double holeTomatoDistance = Math.sqrt(Math.pow((_tomatoX - drainX), 2) + Math.pow((_tomatoY - drainY), 2));
 
